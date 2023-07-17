@@ -1,42 +1,50 @@
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 public class MainFrame extends JFrame {
 	private TextPanel textPanel;
 	private Toolbar toolbar;
 	private FormPanel formPanel;
-	
+	private JFileChooser fileChooser;
+
 	public MainFrame() {
 		super("Hello World!");
-		
+
+		setMinimumSize(new Dimension(500, 400));
 		setSize(800, 600);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
-		
+
 		setLayout(new BorderLayout());
-		
+
 		setJMenuBar(createMenu());
-		
+
 		textPanel = new TextPanel();
+		
+		fileChooser = new JFileChooser();
+		fileChooser.addChoosableFileFilter(new PersonFileFilter());
+		
 		toolbar = new Toolbar();
 		toolbar.setStringListener(new StringListener() {
 			@Override
 			public void textEmitted(String text) {
-				//System.out.print(text);
+				// System.out.print(text);
 				textPanel.appendText(text);
 			}
 		});
-		
-		
+
 		formPanel = new FormPanel();
 		formPanel.setFormListener(new FormListener() {
 			@Override
@@ -46,25 +54,44 @@ public class MainFrame extends JFrame {
 				int ageCat = e.getAgeCategory();
 				String empCat = e.getEmpCat();
 				String gender = e.getGender();
-				
-				textPanel.appendText(name + ": " + occupation + ": " + 
-				ageCat + ", " + empCat + "\n");
-				
+
+				textPanel.appendText(name + ": " + occupation + ": " + ageCat + ", " + empCat + "\n");
+
 				System.out.println(gender);
 			}
 		});
-		
+
 		add(textPanel, BorderLayout.CENTER);
 		add(toolbar, BorderLayout.PAGE_START);
 		add(formPanel, BorderLayout.LINE_START);
 	}
-	
+
 	public JMenuBar createMenu() {
 		JMenuBar menu = new JMenuBar();
 		
 		JMenu fileMenu = new JMenu("File");
 		JMenuItem exportItem = new JMenuItem("Export To...");
+		
+		exportItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (fileChooser.showSaveDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
+					System.out.println(fileChooser.getSelectedFile());
+				}
+			}
+		});
+		
 		JMenuItem importItem = new JMenuItem("Import...");
+		
+		importItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (fileChooser.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
+					System.out.println(fileChooser.getSelectedFile());
+				}
+			}
+		});
+		
 		JMenuItem exitItem = new JMenuItem("Exit");
 		fileMenu.add(exportItem);
 		fileMenu.add(importItem);
@@ -95,6 +122,10 @@ public class MainFrame extends JFrame {
 		exitItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				int action = JOptionPane.showConfirmDialog(MainFrame.this, 
+						"Do you really want to exit the app?", 
+						"Confirm Exit", 
+						JOptionPane.OK_CANCEL_OPTION);
 				System.exit(0);
 			}
 		});
