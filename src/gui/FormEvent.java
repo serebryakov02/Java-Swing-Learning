@@ -1,3 +1,4 @@
+package gui;
 import java.util.EventObject;
 
 public class FormEvent extends EventObject {
@@ -57,4 +58,6 @@ public class FormEvent extends EventObject {
 	public String getGender() {
 		return gender;
 	}
+	
+	
 }

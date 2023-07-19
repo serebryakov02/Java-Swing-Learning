@@ -1,3 +1,4 @@
+package gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -13,11 +14,15 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
+import controller.Controller;
+
 public class MainFrame extends JFrame {
 	private TextPanel textPanel;
 	private Toolbar toolbar;
 	private FormPanel formPanel;
 	private JFileChooser fileChooser;
+	private Controller controller;
+	private TablePanel tablePanel;
 
 	public MainFrame() {
 		super("Hello World!");
@@ -30,6 +35,10 @@ public class MainFrame extends JFrame {
 		setLayout(new BorderLayout());
 
 		setJMenuBar(createMenu());
+		
+		controller = new Controller();
+		tablePanel = new TablePanel();
+		tablePanel.setData(controller.getPeople());
 
 		textPanel = new TextPanel();
 		
@@ -49,7 +58,7 @@ public class MainFrame extends JFrame {
 		formPanel.setFormListener(new FormListener() {
 			@Override
 			public void formEventOccured(FormEvent e) {
-				String name = e.getName();
+				/*String name = e.getName();
 				String occupation = e.getOccupation();
 				int ageCat = e.getAgeCategory();
 				String empCat = e.getEmpCat();
@@ -57,13 +66,17 @@ public class MainFrame extends JFrame {
 
 				textPanel.appendText(name + ": " + occupation + ": " + ageCat + ", " + empCat + "\n");
 
-				System.out.println(gender);
+				System.out.println(gender);*/
+				controller.addPerson(e);
+				tablePanel.refresh();
 			}
 		});
 
-		add(textPanel, BorderLayout.CENTER);
+		
+		
 		add(toolbar, BorderLayout.PAGE_START);
 		add(formPanel, BorderLayout.LINE_START);
+		add(tablePanel, BorderLayout.CENTER);
 	}
 
 	public JMenuBar createMenu() {
