@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
@@ -26,6 +27,7 @@ public class MainFrame extends JFrame {
 	private Controller controller;
 	private TablePanel tablePanel;
 	private PrefsDialog prefsDialog;
+	private Preferences preferences;
 
 	public MainFrame() {
 		super("Hello World!");
@@ -42,6 +44,27 @@ public class MainFrame extends JFrame {
 		controller = new Controller();
 		tablePanel = new TablePanel();
 		prefsDialog = new PrefsDialog(this);
+		
+		
+		// !!!!!!!!!!
+		preferences = Preferences.userRoot().node("db");
+		
+		prefsDialog.setPrefListener(new PrefsListener() {
+			@Override
+			public void preferencesSet(String user, String password, int port) {
+				System.out.println(user +": " + password);
+				
+				preferences.put("user", user);
+				preferences.put("password", password);
+				preferences.putInt("port", port);
+			}
+		});
+		
+		String user = preferences.get("user", "");
+		String password = preferences.get("password", "");
+		Integer port = preferences.getInt("port", 3306);
+		prefsDialog.setDefaults(user, password, port);
+		
 		
 		tablePanel.setPersonTableListener(new PersonTableListener() {
 			public void rowDeleted(int row) {
@@ -143,6 +166,7 @@ public class MainFrame extends JFrame {
 		menu.add(windowMenu);
 		
 		JMenuItem prefsItem = new JMenuItem("Preferences...");
+		prefsItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
 		
 		prefsItem.addActionListener(new ActionListener() {
 			@Override
