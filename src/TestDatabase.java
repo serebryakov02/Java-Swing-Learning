@@ -13,13 +13,20 @@ public class TestDatabase {
 		Database db = new Database();
 		db.connect();
 		
-		db.addPerson(new Person("Mykyta", "C++/Qt Developer", AgeCategory.adult, 
+		db.addPerson(new Person("Mykyta", "C++/Qt/Java Developer", AgeCategory.adult, 
 				EmploymentCategory.selfEmployed, "4444", true, Gender.male));
 		db.addPerson(new Person("Olya", "English teacher", AgeCategory.adult, 
-				EmploymentCategory.employed, null, false, Gender.female));
+				EmploymentCategory.selfEmployed, null, false, Gender.female));
 		
 		try {
 			db.save();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			db.load();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

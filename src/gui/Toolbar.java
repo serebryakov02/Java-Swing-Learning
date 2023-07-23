@@ -1,5 +1,7 @@
 package gui;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -7,39 +9,38 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class Toolbar extends JPanel{
-	private JButton helloBtn;
-	private JButton goodbyeBtn;
-	private StringListener textListener;
+public class Toolbar extends JPanel {
+	private JButton saveBtn;
+	private JButton refreshBtn;
+	private ToolbarListener textListener;
 	
 	public Toolbar() {
 		setBorder(BorderFactory.createEtchedBorder());
 		
-		helloBtn = new JButton("Hello");
-		goodbyeBtn = new JButton("Goodbye");
+		saveBtn = new JButton("Save");
+		refreshBtn = new JButton("Refresh");
 		
 		setLayout(new FlowLayout(FlowLayout.LEFT));
-		add(helloBtn);
-		add(goodbyeBtn);
+		add(saveBtn);
+		add(refreshBtn);
 	}
 	
-	public void setStringListener(StringListener listener) {
-		if (listener == null) return;
+	public void setToolbarListener(ToolbarListener listener) {
 		
 		this.textListener = listener;
 		
-		helloBtn.addMouseListener(new MouseAdapter() {
+		saveBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				textListener.textEmitted("Hello\n");
+				textListener.saveEventOccured();
 			}
 		});
 		
-		goodbyeBtn.addMouseListener(new MouseAdapter() {
+		refreshBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				textListener.textEmitted("Goodbye\n");
+				textListener.refreshEventOccured();
 			}
-		});
+		});	
 	}
 }

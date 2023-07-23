@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.prefs.Preferences;
 
 import javax.swing.JCheckBoxMenuItem;
@@ -20,6 +21,7 @@ import javax.swing.KeyStroke;
 import controller.Controller;
 
 public class MainFrame extends JFrame {
+	private static final long serialVersionUID = -5491727952132645858L;
 	private TextPanel textPanel;
 	private Toolbar toolbar;
 	private FormPanel formPanel;
@@ -80,13 +82,7 @@ public class MainFrame extends JFrame {
 		fileChooser.addChoosableFileFilter(new PersonFileFilter());
 
 		toolbar = new Toolbar();
-		toolbar.setStringListener(new StringListener() {
-			@Override
-			public void textEmitted(String text) {
-				// System.out.print(text);
-				textPanel.appendText(text);
-			}
-		});
+		
 
 		formPanel = new FormPanel();
 		formPanel.setFormListener(new FormListener() {
@@ -105,6 +101,39 @@ public class MainFrame extends JFrame {
 				controller.addPerson(e);
 				tablePanel.refresh();
 			}
+		});
+		
+		toolbar.setToolbarListener(new ToolbarListener() {
+
+			@Override
+			public void saveEventOccured() {
+				controller.connect();
+				
+				try {
+					controller.save();
+				} catch (SQLException e) {
+					JOptionPane.showMessageDialog(MainFrame.this, 
+							"Unable to save to database.", 
+							"Database connection problem.", 
+							JOptionPane.WARNING_MESSAGE);
+				}
+			}
+
+			@Override
+			public void refreshEventOccured() {
+				controller.connect();
+				
+				try {
+					controller.load();
+				} catch (SQLException e) {
+					JOptionPane.showMessageDialog(MainFrame.this, 
+							"Unable to load from database.", 
+							"Database connection problem.", 
+							JOptionPane.WARNING_MESSAGE);
+				}
+				tablePanel.refresh();
+			}
+			
 		});
 
 		add(toolbar, BorderLayout.PAGE_START);
