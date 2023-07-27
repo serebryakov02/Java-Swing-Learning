@@ -115,6 +115,7 @@ public class FormPanel extends JPanel {
 		Dimension dim  = getPreferredSize();
 		dim.width = 300;
 		setPreferredSize(dim);
+		setMinimumSize(dim);
 		
 		Border innerBorder = BorderFactory.createTitledBorder("Add Person");
 		Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);

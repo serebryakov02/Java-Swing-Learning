@@ -19,6 +19,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 
 import controller.Controller;
@@ -33,6 +35,9 @@ public class MainFrame extends JFrame {
 	private TablePanel tablePanel;
 	private PrefsDialog prefsDialog;
 	private Preferences preferences;
+	private JSplitPane splitPane;
+	private JTabbedPane tabPane;
+	private MessagePanel messagePanel;
 
 	public MainFrame() {
 		super("Hello World!");
@@ -61,7 +66,7 @@ public class MainFrame extends JFrame {
 		controller = new Controller();
 		tablePanel = new TablePanel();
 		prefsDialog = new PrefsDialog(this);
-		
+		messagePanel = new MessagePanel();
 		
 		// !!!!!!!!!!
 		preferences = Preferences.userRoot().node("db");
@@ -103,20 +108,19 @@ public class MainFrame extends JFrame {
 		formPanel.setFormListener(new FormListener() {
 			@Override
 			public void formEventOccured(FormEvent e) {
-				/*
-				 * String name = e.getName(); String occupation = e.getOccupation(); int ageCat
-				 * = e.getAgeCategory(); String empCat = e.getEmpCat(); String gender =
-				 * e.getGender();
-				 * 
-				 * textPanel.appendText(name + ": " + occupation + ": " + ageCat + ", " + empCat
-				 * + "\n");
-				 * 
-				 * System.out.println(gender);
-				 */
 				controller.addPerson(e);
 				tablePanel.refresh();
 			}
 		});
+		
+		tabPane = new JTabbedPane();
+		tabPane.add("Persons Database", tablePanel);
+		tabPane.add("Messages", messagePanel);
+		
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, formPanel, tabPane);
+		splitPane.setOneTouchExpandable(true);
+		
+		
 		
 		toolbar.setToolbarListener(new ToolbarListener() {
 
@@ -152,8 +156,7 @@ public class MainFrame extends JFrame {
 		});
 
 		add(toolbar, BorderLayout.PAGE_START);
-		add(formPanel, BorderLayout.LINE_START);
-		add(tablePanel, BorderLayout.CENTER);
+		add(splitPane, BorderLayout.CENTER);
 	}
 
 	public JMenuBar createMenu() {
@@ -219,7 +222,6 @@ public class MainFrame extends JFrame {
 			}
 		});
 		
-		
 		JMenu showMenu = new JMenu("Show");
 		JCheckBoxMenuItem personFormItem = new JCheckBoxMenuItem("Person Form");
 		showMenu.add(personFormItem);
@@ -232,6 +234,11 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JCheckBoxMenuItem chkBox = (JCheckBoxMenuItem) e.getSource();
+				
+				if (personFormItem.isSelected()) {
+					splitPane.setDividerLocation((int)formPanel.getMinimumSize().getWidth());
+				}
+				
 				formPanel.setVisible(chkBox.isSelected());
 			}
 		});

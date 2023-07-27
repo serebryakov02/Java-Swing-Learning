@@ -18,25 +18,15 @@ public class Toolbar extends JToolBar {
 		setFloatable(false);
 		
 		saveBtn = new JButton();
-		saveBtn.setIcon(createIcon("/images/floppy-disk.png"));
+		saveBtn.setIcon(Utils.createIcon("/images/floppy-disk.png"));
 		saveBtn.setToolTipText("Save");
 		
 		refreshBtn = new JButton();
-		refreshBtn.setIcon(createIcon("/images/refresh.png"));
+		refreshBtn.setIcon(Utils.createIcon("/images/refresh.png"));
 		refreshBtn.setToolTipText("Refresh");
 		
 		add(saveBtn);
 		add(refreshBtn);
-	}
-	
-	private ImageIcon createIcon(String path) {
-		URL url = getClass().getResource(path);
-		if (url == null) {
-			System.err.println("Unable to load image: " + path);
-		}
-		
-		ImageIcon icon = new ImageIcon(url);
-		return icon;
 	}
 	
 	public void setToolbarListener(ToolbarListener listener) {
