@@ -38,6 +38,7 @@ public class MainFrame extends JFrame {
 	private JSplitPane splitPane;
 	private JTabbedPane tabPane;
 	private MessagePanel messagePanel;
+	
 
 	public MainFrame() {
 		super("Hello World!");

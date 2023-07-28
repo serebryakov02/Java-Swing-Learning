@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Dialog;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,14 +15,19 @@ public class ProgressDialog extends JDialog {
 	private int progress = 0;
 	private JButton btnAdd;
 	private JButton btnCancel;
+	private ProgressDialogListener listener;
 	
 	public ProgressDialog(JFrame parent) {
-		super(parent, "Progress Dialog Window");
+		super(parent, "Progress Dialog Window", Dialog.ModalityType.APPLICATION_MODAL);
 		
 		setSize(400, 200);
 		this.setLocationRelativeTo(parent);
 		
 		init_gui();
+	}
+	
+	public void setListener(ProgressDialogListener listener) {
+		this.listener = listener;
 	}
 	
 	public void init_gui() {
@@ -48,7 +54,9 @@ public class ProgressDialog extends JDialog {
 		btnCancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				if (listener != null) {
+					listener.progressDialogCancelled();
+				}
 			}
 		});
 		

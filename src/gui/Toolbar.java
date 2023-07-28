@@ -7,7 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JToolBar;
 
-public class Toolbar extends JToolBar {
+public class Toolbar extends JToolBar implements ProgressDialogListener {
 	private JButton saveBtn;
 	private JButton refreshBtn;
 	private ToolbarListener textListener;
@@ -19,6 +19,7 @@ public class Toolbar extends JToolBar {
 		setFloatable(false);
 		
 		progressDialog = new ProgressDialog(parent);
+		progressDialog.setListener((gui.ProgressDialogListener) this);
 		
 		saveBtn = new JButton();
 		saveBtn.setIcon(Utils.createIcon("/images/floppy-disk.png"));
@@ -61,5 +62,11 @@ public class Toolbar extends JToolBar {
 				progressDialog.setVisible(true);
 			}
 		});
+	}
+
+	@Override
+	public void progressDialogCancelled() {
+		System.out.println("Cancelled");
+		progressDialog.setVisible(false);
 	}
 }
