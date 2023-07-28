@@ -1,21 +1,24 @@
 package gui;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URL;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JToolBar;
 
 public class Toolbar extends JToolBar {
 	private JButton saveBtn;
 	private JButton refreshBtn;
 	private ToolbarListener textListener;
+	private JButton execBtn;
+	private ProgressDialog progressDialog;
 	
-	public Toolbar() {
+	public Toolbar(JFrame parent) {
 		setBorder(BorderFactory.createEtchedBorder());
 		setFloatable(false);
+		
+		progressDialog = new ProgressDialog(parent);
 		
 		saveBtn = new JButton();
 		saveBtn.setIcon(Utils.createIcon("/images/floppy-disk.png"));
@@ -25,8 +28,13 @@ public class Toolbar extends JToolBar {
 		refreshBtn.setIcon(Utils.createIcon("/images/refresh.png"));
 		refreshBtn.setToolTipText("Refresh");
 		
+		execBtn = new JButton();
+		execBtn.setIcon(Utils.createIcon("/images/execute.png"));
+		execBtn.setToolTipText("Exec dialog");
+		
 		add(saveBtn);
 		add(refreshBtn);
+		add(execBtn);
 	}
 	
 	public void setToolbarListener(ToolbarListener listener) {
@@ -45,6 +53,13 @@ public class Toolbar extends JToolBar {
 			public void mouseReleased(MouseEvent e) {
 				textListener.refreshEventOccured();
 			}
-		});	
+		});
+		
+		execBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				progressDialog.setVisible(true);
+			}
+		});
 	}
 }

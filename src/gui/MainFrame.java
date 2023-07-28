@@ -101,7 +101,7 @@ public class MainFrame extends JFrame {
 		fileChooser = new JFileChooser();
 		fileChooser.addChoosableFileFilter(new PersonFileFilter());
 
-		toolbar = new Toolbar();
+		toolbar = new Toolbar(this);
 		
 
 		formPanel = new FormPanel();
